@@ -3,12 +3,25 @@
 
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <link rel="stylesheet" href="css/calendar.css">
 </head>
 
 <body>
     <br><br>
     <div class="container">
+        <div>
+            <h1 class="text-center">Instructions</h1>
+            <p>
+                Make a calendar app. The calendar should display all the dates for the current month. The calendar app should also be able to mark appointments. The app must have the following functionality:
+
+                <ul>
+                    <li>Any appointment can be made for the current day or for a future date.</li>
+                    <li>No two appointments should overlap. If an appointment already exists for a day, a warning should be shown.</li>
+                    <li>Appointments can be edited and deleted.</li>
+                </ul>
+            </p>
+        </div>
         <!-- <div class="card col-md-6 offset-md-3">
             <div class="card-header">
                 <h5 class="card-title">Appointments</h5>
@@ -73,18 +86,20 @@
                 <div class="row">
                     <div class="col-12">
                         <label>Date</label>
-                        <input class="form-control" type="date" id="date">
+                        <input class="form-control date-input" type="text" id="date">
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-6">
                         <label>Start Time</label>
-                        <input class="form-control" type="time" id="start_time">
+                        <input class="form-control time-input" type="text" id="start_time">
+                        <!-- <input class="form-control time-input" type="text" id="start_time" data-inputmask="'alias': 'datetime', 'inputFormat': 'HH:MM'"> -->
                     </div>
                     <div class="col-6">
                         <label>End Time</label>
-                        <input class="form-control" type="time" id="end_time">
+                        <input class="form-control time-input" type="text" id="end_time">
+                        <!-- <input class="form-control time-input" type="text" id="end_time" data-inputmask-alias="datetime" data-inputmask-inputFormat="HH:MM"> -->
                     </div>
                 </div>
                 <br>
@@ -108,7 +123,9 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <script src="js/calendar.js"></script>
 
 </body>
 

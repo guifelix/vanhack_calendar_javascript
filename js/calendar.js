@@ -7,8 +7,20 @@ $(function () {
         if (arrAppointment == null)
             arrAppointment = [];
     } else {
-        alert("Sorry, but your web browser do not support localstorage, this app won't work. Try updating your browser first.")
+        iziToast.warning({
+            title: 'Caution',
+            message: "Sorry, but your web browser do not support localstorage, this app won't work. Try updating your browser first.",
+            overlay: true,
+            zindex: 999,
+            position: 'center',
+            timeout: 20000,
+        });
     }
+
+    $("#start_time").inputmask("hh:mm", {placeholder: "hh:mm", alias: "datetime", oncomplete: function(){ $("#end_time").focus(); }});
+    $("#end_time").inputmask("hh:mm", {placeholder: "hh:mm", alias: "datetime", oncomplete: function(){ compare(); $("#submit").focus(); }});
+    $(".date-input").inputmask("dd/mm/yyyy", {placeholder: "dd/mm/yyyy", alias: "datetime"});
+
 });
 
 let today = new Date();
@@ -49,8 +61,16 @@ function showCalendar(month, year) {
                 let cell = document.createElement("li");
                 let cellText = document.createTextNode(date);
                 if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
+                    cell.classList.add("today");
                     cell.classList.add("active");
                 } // color today's date
+                if (date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()) {
+                    cell.classList.add("inactive");
+                    cell.setAttribute('disabled', 'disabled');
+                }
+                if (date >= today.getDate() && year >= today.getFullYear() && month >= today.getMonth()) {
+                    cell.classList.add("active");
+                }
                 cell.appendChild(cellText);
                 tbl.appendChild(cell);
                 date++;
@@ -62,13 +82,25 @@ function showCalendar(month, year) {
 
 
 
-$("#days li").on("click", function () {
-    $('#date').val($('#year').text() + "-" + $('#month').data('val') + "-" + $(this).text());
+$("#days li.active").on("click", function () {
+    $('#date').val($(this).text() + "/" + ($('#month').data('val') + 1) + "/" + $('#year').text());
     $("#start_time").focus();
+});
+
+$("#days li.inactive").on("click", function () {
+    iziToast.error({
+        title: 'Error',
+        message: "You can make appointments just this day and foward",
+        overlay: true,
+        zindex: 999,
+        position: 'center',
+        timeout: 3000,
+    });
 });
 
 function make_appointment() {
     if (is_empty() == false) {
+        is_past_date();
         compare();
         if (is_overlap() == false) {
             var appointment = JSON.stringify({
@@ -85,14 +117,24 @@ function make_appointment() {
 
             $("#submit").prop('disabled', true);
             clear_input();
-            alert("Appointment created");
+            iziToast.success({
+                title: 'Success',
+                message: 'Appointment created',
+            });
         }
     } else {
-        alert("All input fields are needed in order to make an appointment");
+        iziToast.error({
+            title: 'Error',
+            message: "All input fields are needed in order to make an appointment",
+            overlay: true,
+            zindex: 999,
+            position: 'center',
+            timeout: 3000,
+        });
     }
 }
 
-$("#end_time").focusout(function () {
+$("#end_time, #start_time").focusout(function () {
     compare();
 });
 
@@ -124,38 +166,50 @@ function is_empty() {
 
 
 function compare() {
-    var strStartTime = $("#start_time").val();
-    var strEndTime = $("#end_time").val();
+    var startTime = Date.parse(get_Date($("#start_time").val()));
+    var endTime = Date.parse(get_Date( $("#end_time").val()));
 
-    var startTime = get_Date(strStartTime);
-    var endTime = new Date(startTime)
-    endTime = endTime.setHours(GetHours(strEndTime), GetMinutes(strEndTime), 0);
     if (startTime > endTime) {
         $("#submit").prop('disabled', true);
         clear_input();
-        alert("Start Time is greater than end time");
+        iziToast.warning({
+            title: 'Caution',
+            message: "Start Time is greater than end time",
+            overlay: true,
+            zindex: 999,
+            position: 'center',
+            timeout: 2000,
+        });
     }
     if (startTime == endTime) {
         $("#submit").prop('disabled', true);
         clear_input();
-        alert("Start Time equals end time");
+        iziToast.warning({
+            title: 'Caution',
+            message: "Start Time equals end time",
+            overlay: true,
+            zindex: 999,
+            position: 'center',
+            timeout: 2000,
+        });
     }
+}
+
+function is_past_date() {
+    var today = new Date();
+    var selected_date = get_Date();
+    if (selected_date < today) {
+        return true;
+    }
+    return false;
 }
 
 function GetDateInput() {
     var date = $("#date").val();
-    return date.split("-");
-}
-
-function GetHours(d) {
-    return parseInt(d.split(':')[0]);
-}
-function GetMinutes(d) {
-    return parseInt(d.split(':')[1]);
+    return date.split("/");
 }
 
 function is_overlap(sTime, eTime) {
-    debugger;
     if (sTime == undefined || eTime == undefined) {
         sTime = $("#start_time").val();
         eTime = $("#end_time").val();
@@ -172,7 +226,7 @@ function is_overlap(sTime, eTime) {
 
 function get_Date(time) {
     var arrDate = GetDateInput();
-    var date = new Date(arrDate[0], arrDate[1], arrDate[2], 0, 0, 0, 0);
+    var date = new Date(arrDate[2], arrDate[1]-1, arrDate[0], 0, 0, 0, 0);
     var _t = time.split(":");
     date.setHours(_t[0], _t[1], 0, 0);
     return date;
