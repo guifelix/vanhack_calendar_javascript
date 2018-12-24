@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <!-- <div class="card col-md-6 offset-md-3">
+            <div class="card-header">
+                <h5 class="card-title">Appointments</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <div id="month"></div>
+                    <div id="year"></div>
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="weekdays card-text weekdays bg-dark" id="weekdays">
+                    <li class="text-white">Mo</li>
+                    <li class="text-white">Tu</li>
+                    <li class="text-white">We</li>
+                    <li class="text-white">Th</li>
+                    <li class="text-white">Fr</li>
+                    <li class="text-white">Sa</li>
+                    <li class="text-white">Su</li>
+                </ul>
+                <p class="card-text days bg-light" id="days"></p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div> -->
+
+        <!-- <h1 class="text-center">Appointments</h1> -->
+        <div class="calendar col-md-8 offset-md-2">
+            <div class="month bg-primary">
+                <ul>
+                    <li id="month"></li>
+                    <li id="year"></li>
+                </ul>
+            </div>
+
+            <ul class="weekdays bg-dark" id="weekdays">
+                <li class="text-white">Mo</li>
+                <li class="text-white">Tu</li>
+                <li class="text-white">We</li>
+                <li class="text-white">Th</li>
+                <li class="text-white">Fr</li>
+                <li class="text-white">Sa</li>
+                <li class="text-white">Su</li>
+            </ul>
+
+            <ul class="days bg-light" id="days">
+            </ul>
+        </div>
+
+        <br><hr>
+
+        <div class="col-md-3 offset-md-10">
+            <h3>Appointments</h3>
+            <div id="appointment_list"></div>
+        </div>
+        <div class="col-md-6 offset-md-3">
+            <form id="form_create_appointment">
+                <!-- <div class="form-group">
+                    <input class="form-control" type="date" id="date">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="time" id="time">
+                </div> -->
+                <div class="row">
+                    <div class="col-12">
+                        <label>Date</label>
+                        <input class="form-control" type="date" id="date">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Start Time</label>
+                        <input class="form-control" type="time" id="start_time">
+                    </div>
+                    <div class="col-6">
+                        <label>End Time</label>
+                        <input class="form-control" type="time" id="end_time">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-warning btn-lg btn-block" id="clear" onclick="clear_input()">Clear</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" id="submit" onclick="make_appointment()" disabled="disabled">Make Appointment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <br><hr>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="app.js"></script>
+
+</body>
+
+</html>
