@@ -419,6 +419,10 @@ function clear_storage(){
     $(`.week td.active`).removeClass('badge1');
     $(`.week td.active`).removeAttr( "data-badge" );
     print(true);
+    iziToast.success({
+        title: 'Success',
+        message: 'All appointments deleted',
+    });
 }
 
 // function put_badges(input = false, init = false, edit = false){
@@ -493,6 +497,11 @@ function delete_appointment(id){
 
         localStorage.setItem('tbAppointment', JSON.stringify(data));
         print(false, false, true);
+        iziToast.success({
+            title: 'Success',
+            message: 'Appointment deleted',
+        });
+
     }
 };
 
