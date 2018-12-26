@@ -10,112 +10,106 @@
 <body>
     <br><br>
     <div class="container">
-        <div>
-            <h1 class="text-center">Instructions</h1>
-            <p>
-                Make a calendar app. The calendar should display all the dates for the current month. The calendar app should also be able to mark appointments. The app must have the following functionality:
+        <div class="row">
+            <div class="instructions">
+                <h1 class="text-center">Instructions</h1>
+                <p>
+                    Make a calendar app. The calendar should display all the dates for the current month. The calendar app should also be able to mark appointments. The app must have the following functionality:
 
-                <ul>
-                    <li>Any appointment can be made for the current day or for a future date.</li>
-                    <li>No two appointments should overlap. If an appointment already exists for a day, a warning should be shown.</li>
-                    <li>Appointments can be edited and deleted.</li>
-                </ul>
-            </p>
+                    <ul>
+                        <li>Any appointment can be made for the current day or for a future date.</li>
+                        <li>No two appointments should overlap. If an appointment already exists for a day, a warning should be shown.</li>
+                        <li>Appointments can be edited and deleted.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
-        <!-- <div class="card col-md-6 offset-md-3">
-            <div class="card-header">
-                <h5 class="card-title">Appointments</h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    <div id="month"></div>
-                    <div id="year"></div>
-                </h6>
+        <br>
+        <div class="row">
+            <div class="calendar col-md-8 offset-md-2">
+                <div>
+                    <div class="card-header bg-primary">
+                        <ul>
+                            <li id="month" class="text-white text-uppercase text-center">
+                            </li>
+                            <li id="year" class="text-white text-uppercase text-center">
+                            </li>
+                        </ul>
+                    </div>
+                    <table class="table calendar table-bordered table-responsive-sm" id="calendar">
+                        <thead>
+                            <tr class="weekdays bg-dark">
+                              <th scope="col" class="text-white text-center">Mo</th>
+                              <th scope="col" class="text-white text-center">Tu</th>
+                              <th scope="col" class="text-white text-center">We</th>
+                              <th scope="col" class="text-white text-center">Th</th>
+                              <th scope="col" class="text-white text-center">Fr</th>
+                              <th scope="col" class="text-white text-center">Sa</th>
+                              <th scope="col" class="text-white text-center">Su</th>
+                            </tr>
+                          </thead>
+                        <tbody class="days bg-light" id="days"></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
             </div>
-            <div class="card-body">
-                <ul class="weekdays card-text weekdays bg-dark" id="weekdays">
-                    <li class="text-white">Mo</li>
-                    <li class="text-white">Tu</li>
-                    <li class="text-white">We</li>
-                    <li class="text-white">Th</li>
-                    <li class="text-white">Fr</li>
-                    <li class="text-white">Sa</li>
-                    <li class="text-white">Su</li>
-                </ul>
-                <p class="card-text days bg-light" id="days"></p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
-        </div> -->
-
-        <!-- <h1 class="text-center">Appointments</h1> -->
-        <div class="calendar col-md-8 offset-md-2">
-            <div class="month bg-primary">
-                <ul>
-                    <li id="month"></li>
-                    <li id="year"></li>
-                </ul>
-            </div>
-
-            <ul class="weekdays bg-dark" id="weekdays">
-                <li class="text-white">Mo</li>
-                <li class="text-white">Tu</li>
-                <li class="text-white">We</li>
-                <li class="text-white">Th</li>
-                <li class="text-white">Fr</li>
-                <li class="text-white">Sa</li>
-                <li class="text-white">Su</li>
-            </ul>
-
-            <ul class="days bg-light" id="days">
-            </ul>
         </div>
 
         <br><hr>
 
-        <div class="col-md-3 offset-md-10">
-            <h3>Appointments</h3>
-            <div id="appointment_list"></div>
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <form id="form_create_appointment">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Date</label>
+                            <input class="form-control date-input" type="text" id="date">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Start Time</label>
+                            <input class="form-control time-input" type="text" id="start_time">
+                        </div>
+                        <div class="col-6">
+                            <label>End Time</label>
+                            <input class="form-control time-input" type="text" id="end_time">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-default btn-block" id="clear" onclick="clear_input()">Clear</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary btn-block" id="submit" onclick="make_appointment()" disabled="disabled">Make Appointment</button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <button type="button" class="btn btn-warning btn-block" id="btn_clear_storage" onclick="clear_storage()">Clear Appointments</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3 offset-md-1">
+                <h3>Appointments</h3>
+                <table class="table table-bordered table-hover table-striped table-sm" id="appointment_list">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Start time</th>
+                            <th scope="col">End time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-md-6 offset-md-3">
-            <form id="form_create_appointment">
-                <!-- <div class="form-group">
-                    <input class="form-control" type="date" id="date">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="time" id="time">
-                </div> -->
-                <div class="row">
-                    <div class="col-12">
-                        <label>Date</label>
-                        <input class="form-control date-input" type="text" id="date">
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6">
-                        <label>Start Time</label>
-                        <input class="form-control time-input" type="text" id="start_time">
-                        <!-- <input class="form-control time-input" type="text" id="start_time" data-inputmask="'alias': 'datetime', 'inputFormat': 'HH:MM'"> -->
-                    </div>
-                    <div class="col-6">
-                        <label>End Time</label>
-                        <input class="form-control time-input" type="text" id="end_time">
-                        <!-- <input class="form-control time-input" type="text" id="end_time" data-inputmask-alias="datetime" data-inputmask-inputFormat="HH:MM"> -->
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-warning btn-lg btn-block" id="clear" onclick="clear_input()">Clear</button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-primary btn-lg btn-block" id="submit" onclick="make_appointment()" disabled="disabled">Make Appointment</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <br><hr>
+        <br><br><br>
     </div>
 
 
