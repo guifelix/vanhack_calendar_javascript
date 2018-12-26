@@ -24,13 +24,15 @@ $(function () {
         regex: "(?:[\\w\\d]+(\\s)*){1,5}",
         clearIncomplete: true
     });
+
     $("#start_time").inputmask("hh:mm", {
         placeholder: "hh:mm",
         alias: "datetime",
         clearIncomplete: true,
         oncomplete: function(){
             $("#end_time").focus();
-        }});
+    }});
+
     $("#end_time").inputmask("hh:mm", {
         placeholder: "hh:mm",
         alias: "datetime",
@@ -38,14 +40,15 @@ $(function () {
         oncomplete: function(){
             compare();
             $("#submit").focus();
-        }});
+    }});
+
     $(".date-input").inputmask("dd/mm/yyyy", {
         placeholder: "dd/mm/yyyy",
         alias: "datetime",
         clearIncomplete: true
     });
 
-    print();
+    print(false, true);
 
 });
 
@@ -121,6 +124,7 @@ function showCalendar(month, year) {
                 let cell = document.createElement("td");
                 let cellText = document.createTextNode("");
                 cell.classList.add("inactive");
+                cell.classList.add("disabled");
                 cell.classList.add("bg-secondary");
                 cell.appendChild(cellText);
                 row.appendChild(cell);
@@ -138,6 +142,7 @@ function showCalendar(month, year) {
                     cell.classList.add("font-weight-bold");
                 } else if(date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
                     cell.classList.add("inactive");
+                    cell.classList.add("disabled");
                     cell.classList.add("text-white");
                     cell.classList.add("bg-light");
                     cell.classList.add("text-muted");
@@ -195,19 +200,9 @@ function make_appointment() {
             SaveDataToLocalStorage(appointment);
             $("#btn_clear_storage").prop('disabled', false);
 
-            // @todo add badge of appointment counter
-            // var label = GetDateInput();
+            put_badges(false, false);
 
-            // var td = $('.wwek > td.active').filter(function(){
-            //     return $(this).text() === label[0];
-            // });
-
-            // // find span to iterate counter
-            // td.find("span")
-
-            // .append(`<span style="margin-left:5px" data-day="${label[0]}" class="badge badge-info badge-corner radius-3">7</span>`);
-
-            print();
+            print(false, false);
 
             clear_input();
             iziToast.success({
@@ -343,16 +338,18 @@ function is_overlap(sTime, eTime) {
     }
 }
 
-function get_Date(time) {
-    var arrDate = GetDateInput();
+function get_Date(time, arrDate = false) {
+    if (arrDate == false) {
+        var arrDate = GetDateInput();
+    }
     var date = new Date(arrDate[2], arrDate[1]-1, arrDate[0], 0, 0, 0, 0);
     var _t = time.split(":");
     date.setHours(_t[0], _t[1], 0, 0);
     return date;
 }
 
-function print(clear) {
-    if (clear){
+function print(clear = false, init = false) {
+    if (clear != false){
         $("#appointment_list > tbody").html("");
         return true;
     };
@@ -362,6 +359,7 @@ function print(clear) {
         $("#appointment_list > tbody").html("");
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
+            put_badges(element.date.split("/"), init);
             $("#appointment_list > tbody").append(
                 `
                 <tr>
@@ -397,5 +395,29 @@ function clear_storage(){
     arrAppointment.push(JSON.parse(localStorage.getItem('tbAppointment')));
     localStorage.setItem('tbAppointment', JSON.stringify(arrAppointment));
     $("#btn_clear_storage").prop('disabled', true);
-    print('clear');
+    $(`.week td.active`).removeClass('badge1');
+    $(`.week td.active`).removeAttr( "data-badge" );
+    print(true, false);
 }
+
+function put_badges(input = false, init = false){
+    if (input == false) {
+        var label = GetDateInput();
+    } else {
+        var label = input;
+    }
+
+    var td = $(`.week td.active:contains("${label[0]}")`);
+
+    if (td.hasClass("badge1") == true) {
+        var counter = td.data("badge");
+        if (typeof counter == 'undefined') {
+            td.data("badge", 1);
+        } else {
+            td.attr('data-badge', counter+1);
+        }
+    } else {
+        td.addClass( "badge1" );
+        td.attr('data-badge', 1);
+    }
+};
