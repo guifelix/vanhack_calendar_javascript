@@ -26,11 +26,11 @@
     padding: 10px 0;
 }
 
-.week > td.active:hover {
-    background-color: red;
-    background: red;
-    color: red;
-}
+/* .week > td.active:hover { */
+    /* background-color: red; */
+    /* background: red; */
+    /* color: red; */
+/* } */
 
 .badge1 {
     position:relative;
