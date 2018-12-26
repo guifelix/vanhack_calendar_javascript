@@ -1,6 +1,13 @@
 * {box-sizing: border-box;}
 .card-header * {list-style-type: none;}
 
+.required:after{
+    content:"*";
+    font-weight:bold;
+    color: red;
+    margin-left: 5px;
+}
+
 .card-header {
     padding: 50px 25px;
     width: 100%;

@@ -48,6 +48,8 @@ $(function () {
         clearIncomplete: true
     });
 
+    $('[data-toggle="popover"]').popover();
+
     print(false, true);
 
 });

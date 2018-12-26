@@ -62,8 +62,8 @@
                 <form id="form_create_appointment">
                     <div class="form-row">
                         <div class="col form-group">
-                            <label>Date</label>
-                            <input class="form-control date-input" type="text" id="date">
+                            <label class="required">Date</label>
+                            <input class="form-control date-input" type="text" id="date" data-trigger="hover" data-toggle="popover" title="Date" data-content="You can select any date from today clicking on the number in the calendar" required>
                         </div>
                         <div class="col form-group">
                             <label>Description</label>
@@ -72,31 +72,33 @@
                     </div>
                     <div class="form-row">
                         <div class="col form-group">
-                            <label>Start Time</label>
-                            <input class="form-control time-input" type="text" id="start_time">
+                            <label class="required">Start Time</label>
+                            <input class="form-control time-input" type="text" id="start_time" required>
                         </div>
                         <div class="col form-group">
-                            <label>End Time</label>
-                            <input class="form-control time-input" type="text" id="end_time">
+                            <label class="required">End Time</label>
+                            <input class="form-control time-input" type="text" id="end_time" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col form-group">
-                            <button type="button" class="btn btn-default btn-block" id="clear" onclick="clear_input()">Clear</button>
+                            <button type="button" class="btn btn-warning btn-block" id="clear" onclick="clear_input()">Clear Form</button>
                         </div>
                         <div class="col form-group">
                             <button type="button" class="btn btn-primary btn-block" id="submit" onclick="make_appointment()" disabled="disabled">Make Appointment</button>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col form-group">
-                            <button type="button" class="btn btn-warning btn-block" id="btn_clear_storage" onclick="clear_storage()">Clear Appointments</button>
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="col offset-md-1">
-                <h3>Appointments</h3>
+                <div class="row">
+                    <div class="col">
+                        <h3>Appointments</h3>
+                    </div>
+                    <div class="col form-group">
+                        <button type="button" class="btn btn-danger btn-block" id="btn_clear_storage" onclick="clear_storage()">Clear Appointments</button>
+                    </div>
+                </div>
                 <table class="table table-bordered table-hover table-striped table-sm" id="appointment_list">
                     <thead class="thead-dark">
                         <tr>
