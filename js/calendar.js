@@ -4,8 +4,12 @@ $(function () {
     if (typeof (Storage) !== "undefined") {
         arrAppointment = localStorage.getItem("tbAppointment");
         arrAppointment = JSON.parse(arrAppointment);
-        if (arrAppointment == null){
-            var arrAppointment = [];
+        $("#btn_clear_storage").prop('disabled', false);
+        $(`#btn_clear_storage`).show();
+        if (arrAppointment == null || arrAppointment == "[null]"){
+            $("#btn_clear_storage").prop('disabled', true);
+            $(`#btn_clear_storage`).hide();
+            arrAppointment = [];
             arrAppointment.push(JSON.parse(localStorage.getItem('tbAppointment')));
             localStorage.setItem('tbAppointment', JSON.stringify(arrAppointment));
         }
@@ -128,6 +132,7 @@ function showCalendar(month, year) {
                 cell.classList.add("inactive");
                 cell.classList.add("disabled");
                 cell.classList.add("bg-secondary");
+                cell.setAttribute('data-day', date);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             } else if (date > daysInMonth) {
@@ -142,6 +147,8 @@ function showCalendar(month, year) {
                     cell.classList.add("today");
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
+                    cell.setAttribute('data-day', date);
+                    put_badges_new(date, cell);
                 } else if(date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
                     cell.classList.add("inactive");
                     cell.classList.add("disabled");
@@ -150,6 +157,7 @@ function showCalendar(month, year) {
                     cell.classList.add("text-muted");
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-light");
+                    cell.setAttribute('data-day', date);
                     cell.setAttribute('disabled', 'disabled');
                 } else if (date >= today.getDate() && year >= today.getFullYear() && month >= today.getMonth()) {
                     cell.classList.add("active");
@@ -157,15 +165,14 @@ function showCalendar(month, year) {
                     cell.classList.add("bg-white");
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
+                    cell.setAttribute('data-day', date);
+                    put_badges_new(date, cell);
                 }
                 cell.appendChild(cellText);
                 row.appendChild(cell);
                 date++;
             }
-
-
         }
-
         tbl.appendChild(row); // appending each row into calendar body.
     }
 
@@ -193,6 +200,7 @@ function make_appointment() {
         compare();
         if (is_overlap() == false) {
             var appointment = {
+                id: $("#date").inputmask('unmaskedvalue')+$("#start_time").inputmask('unmaskedvalue')+$("#end_time").inputmask('unmaskedvalue'),
                 date: $("#date").val(),
                 description: $("#description").val(),
                 start_time: $("#start_time").val(),
@@ -201,10 +209,8 @@ function make_appointment() {
 
             SaveDataToLocalStorage(appointment);
             $("#btn_clear_storage").prop('disabled', false);
-
-            put_badges(false, false);
-
-            print(false, false);
+            $(`#btn_clear_storage`).show();
+            print();
 
             clear_input();
             iziToast.success({
@@ -350,7 +356,7 @@ function get_Date(time, arrDate = false) {
     return date;
 }
 
-function print(clear = false, init = false) {
+function print(clear = false, init = false, edit = false) {
     if (clear != false){
         $("#appointment_list > tbody").html("");
         return true;
@@ -359,20 +365,32 @@ function print(clear = false, init = false) {
     data = JSON.parse(data);
     if (data[0] !== null) {
         $("#appointment_list > tbody").html("");
+        let date = [];
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
-            put_badges(element.date.split("/"), init);
             $("#appointment_list > tbody").append(
                 `
                 <tr>
-                    <td>${element.date}</td>
-                    <td>${element.description}</td>
-                    <td>${element.start_time}</td>
-                    <td>${element.end_time}</td>
+                    <td class="text-center align-middle">${element.date}</td>
+                    <td class="text-center align-middle">${element.description}</td>
+                    <td class="text-center align-middle">${element.start_time}</td>
+                    <td class="text-center align-middle">${element.end_time}</td>
+                    <td class="text-center align-middle">
+                        <button class="btn btn-danger btn-sm " onclick="delete_appointment(${element.id})"><i class="fas fa-times-circle"></i></button>
+                        <button class="btn btn-primary btn-sm " onclick="edit_appointment(${element.id})"><i class="fas fa-edit"></i></button>
+                    </td>
                 </tr>
                 `
             );
+            let currDate = element.date.split("/");
+            date.push(currDate[0]);
         }
+        date = [...new Set(date)];
+        date.forEach(element => {
+            let cell = document.querySelector(`.week > td.active[data-day='${element}']`);
+            put_badges_new(element, cell);
+        });
+        // put_badges(element.date.split("/"), false, edit);
     }
 }
 
@@ -397,29 +415,109 @@ function clear_storage(){
     arrAppointment.push(JSON.parse(localStorage.getItem('tbAppointment')));
     localStorage.setItem('tbAppointment', JSON.stringify(arrAppointment));
     $("#btn_clear_storage").prop('disabled', true);
+    $(`#btn_clear_storage`).hide();
     $(`.week td.active`).removeClass('badge1');
     $(`.week td.active`).removeAttr( "data-badge" );
-    print(true, false);
+    print(true);
 }
 
-function put_badges(input = false, init = false){
-    if (input == false) {
-        var label = GetDateInput();
-    } else {
-        var label = input;
+// function put_badges(input = false, init = false, edit = false){
+//     if (input == false) {
+//         var label = GetDateInput();
+//     } else {
+//         var label = input;
+//     }
+
+//     var td = $(`.week td.active:contains("${label[0]}")`);
+
+//     if (td.hasClass("badge1") == true) {
+//         var counter = parseInt(td.attr("data-badge"));
+//         console.log(counter);
+//         if (typeof counter == 'undefined') {
+//             // td.data("badge", 1);
+//             td.removeClass('badge1');
+//             td.removeAttr( "data-badge" );
+//         } else if (counter > 0) {
+//             td.attr('data-badge', counter);
+//             if (init == false) {
+//                 if (edit == false) {
+//                     td.attr('data-badge', counter+1);
+//                 } else {
+//                     td.attr('data-badge', counter-1);
+//                 }
+//             }
+//         }
+//     } else {
+//         td.addClass( "badge1" );
+//         td.attr('data-badge', 1);
+//     }
+// };
+
+function edit_appointment(id){
+    var data = localStorage.getItem("tbAppointment");
+    data = JSON.parse(data);
+    if (data[0] !== null) {
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element.id == id) {
+                $("#date").val(element.date);
+                $("#description").val(element.description);
+                $("#start_time").val(element.start_time);
+                $("#end_time").val(element.end_time);
+                $("#submit").prop('disabled', false);
+                delete_appointment(id);
+            }
+        }
     }
 
-    var td = $(`.week td.active:contains("${label[0]}")`);
+};
 
-    if (td.hasClass("badge1") == true) {
-        var counter = td.data("badge");
-        if (typeof counter == 'undefined') {
-            td.data("badge", 1);
-        } else {
-            td.attr('data-badge', counter+1);
+function delete_appointment(id){
+    var data = localStorage.getItem("tbAppointment");
+    data = JSON.parse(data);
+    if (data[0] !== null) {
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            if (element == null) {
+                // delete data[i];
+                data.splice(i, 1);
+            }
+            if (element.id == id) {
+                data.splice(i, 1);
+                // delete data[i];
+            }
         }
-    } else {
-        td.addClass( "badge1" );
-        td.attr('data-badge', 1);
+        data = data.filter(function (el) {
+            return el != null;
+        });
+
+        localStorage.setItem('tbAppointment', JSON.stringify(data));
+        print(false, false, true);
     }
 };
+
+
+function put_badges_new(date, cell) {
+    var data = localStorage.getItem("tbAppointment");
+    data = JSON.parse(data);
+    if (data[0] !== null) {
+        let counter = 0;
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            // if (cell.hasAttribute('data-day')) {
+                if (cell.getAttribute("data-day") == element.date.slice(0,2)) {
+                    counter++;
+                }
+            // }
+        }
+
+        if (counter >= 1) {
+            cell.classList.add("badge1");
+            cell.setAttribute('data-badge', counter);
+        }
+        if (counter <= 0) {
+            cell.classList.remove("badge1");
+            cell.removeAttribute('data-badge');
+        }
+    }
+}
