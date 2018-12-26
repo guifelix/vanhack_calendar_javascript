@@ -58,48 +58,50 @@
         <br><hr>
 
         <div class="row">
-            <div class="col-md-4 offset-md-4">
+            <div class="col offset-md-1">
                 <form id="form_create_appointment">
-                    <div class="row">
-                        <div class="col-12">
+                    <div class="form-row">
+                        <div class="col form-group">
                             <label>Date</label>
                             <input class="form-control date-input" type="text" id="date">
                         </div>
+                        <div class="col form-group">
+                            <label>Description</label>
+                            <input class="form-control" type="text" id="description">
+                        </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-6">
+                    <div class="form-row">
+                        <div class="col form-group">
                             <label>Start Time</label>
                             <input class="form-control time-input" type="text" id="start_time">
                         </div>
-                        <div class="col-6">
+                        <div class="col form-group">
                             <label>End Time</label>
                             <input class="form-control time-input" type="text" id="end_time">
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col form-group">
                             <button type="button" class="btn btn-default btn-block" id="clear" onclick="clear_input()">Clear</button>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col form-group">
                             <button type="button" class="btn btn-primary btn-block" id="submit" onclick="make_appointment()" disabled="disabled">Make Appointment</button>
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md">
-                            <button type="button" class="btn btn-warning btn-block" id="btn_clear_storage" onclick="clear_storage()">Clear Appointments</button>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <button type="button" class="btn btn-warning btn-block" id="btn_clear_storage" onclick="clear_storage()" disabled="disabled">Clear Appointments</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="col-md-3 offset-md-1">
+            <div class="col offset-md-1">
                 <h3>Appointments</h3>
                 <table class="table table-bordered table-hover table-striped table-sm" id="appointment_list">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Date</th>
+                            <th scope="col">Description</th>
                             <th scope="col">Start time</th>
                             <th scope="col">End time</th>
                         </tr>

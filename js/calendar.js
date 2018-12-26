@@ -20,9 +20,30 @@ $(function () {
         });
     }
 
-    $("#start_time").inputmask("hh:mm", {placeholder: "hh:mm", alias: "datetime", oncomplete: function(){ $("#end_time").focus(); }});
-    $("#end_time").inputmask("hh:mm", {placeholder: "hh:mm", alias: "datetime", oncomplete: function(){ compare(); $("#submit").focus(); }});
-    $(".date-input").inputmask("dd/mm/yyyy", {placeholder: "dd/mm/yyyy", alias: "datetime"});
+    $('#description').inputmask('Regex', {
+        regex: "(?:[\\w\\d]+(\\s)*){1,5}",
+        clearIncomplete: true
+    });
+    $("#start_time").inputmask("hh:mm", {
+        placeholder: "hh:mm",
+        alias: "datetime",
+        clearIncomplete: true,
+        oncomplete: function(){
+            $("#end_time").focus();
+        }});
+    $("#end_time").inputmask("hh:mm", {
+        placeholder: "hh:mm",
+        alias: "datetime",
+        clearIncomplete: true,
+        oncomplete: function(){
+            compare();
+            $("#submit").focus();
+        }});
+    $(".date-input").inputmask("dd/mm/yyyy", {
+        placeholder: "dd/mm/yyyy",
+        alias: "datetime",
+        clearIncomplete: true
+    });
 
     print();
 
@@ -145,7 +166,7 @@ function showCalendar(month, year) {
 
 $("#days td.active").on("click", function () {
     $('#date').val($(this).text() + "/" + ($('#month').data('val') + 1) + "/" + $('#year').text());
-    $("#start_time").focus();
+    $("#description").focus();
 });
 
 $("#days td.inactive").on("click", function () {
@@ -165,9 +186,8 @@ function make_appointment() {
         compare();
         if (is_overlap() == false) {
             var appointment = {
-                // @todo
-                // add description
                 date: $("#date").val(),
+                description: $("#description").val(),
                 start_time: $("#start_time").val(),
                 end_time: $("#end_time").val(),
             };
@@ -231,6 +251,7 @@ $("#end_time, #start_time, #date").keyup(function () {
 
 function clear_input() {
     $("#date").val('');
+    $("#description").val('');
     $("#start_time").val('');
     $("#end_time").val('');
     $("#submit").prop('disabled', true);
@@ -330,20 +351,22 @@ function get_Date(time) {
     return date;
 }
 
-function print() {
-    var data = localStorage.getItem("tbAppointment");
-    if (data == null){
+function print(clear) {
+    if (clear){
         $("#appointment_list > tbody").html("");
-        return false
+        return true;
     };
+    var data = localStorage.getItem("tbAppointment");
     data = JSON.parse(data);
     if (data[0] !== null) {
+        $("#appointment_list > tbody").html("");
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
             $("#appointment_list > tbody").append(
                 `
                 <tr>
                     <td>${element.date}</td>
+                    <td>${element.description}</td>
                     <td>${element.start_time}</td>
                     <td>${element.end_time}</td>
                 </tr>
@@ -374,5 +397,5 @@ function clear_storage(){
     arrAppointment.push(JSON.parse(localStorage.getItem('tbAppointment')));
     localStorage.setItem('tbAppointment', JSON.stringify(arrAppointment));
     $("#btn_clear_storage").prop('disabled', true);
-    print();
+    print('clear');
 }
