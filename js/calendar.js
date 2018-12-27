@@ -80,51 +80,11 @@ function showCalendar(month, year) {
     $("#year").text(year);
 
     let date = 1;
-    // for (let i = 0; i < 6; i++) {
-    //     let week = tbl.append(`<tr id="week_${i}"></tr>`);
-    //     for (let j = 0; j < 7; j++) {
-    //         if (i === 0 && j < firstDay) {
-    //             week.append(`<td></td>`);
-    //             // tbl.append(`<li></li>`);
-    //             // let cell = document.createElement("li");
-    //             // let cellText = document.createTextNode("");
-    //             // cell.appendChild(cellText);
-    //             // tbl.appendChild(cell);
-    //         } else if (date > daysInMonth) {
-    //             break;
-    //         } else {
-    //             // let cell = document.createElement("li");
-    //             // let cellText = document.createTextNode(date);
-    //             if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
-    //                 week.find(`tr:eq(${i})`).append(`<td><a class="active text-white bg-dark today p-1 font-weight-bolder">${date}</a></td>`);
-    //                 // tbl.append(`<li><a class="active text-white bg-dark today p-1 font-weight-bolder">${date}</a></li>`);
-    //                 // cell.classList.add("today");
-    //                 // cell.classList.add("active");
-    //             } // color today's date
-    //             else if(date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()) {
-    //                 week.find(`tr:eq(${i})`).append(`<td><a class="inactive text-muted" disabled="disabled">${date}</a></td>`);
-    //                 // tbl.append(`<li><a class="inactive text-muted" disabled="disabled">${date}</a></li>`);
-    //                 // cell.classList.add("inactive");
-    //                 // cell.setAttribute('disabled', 'disabled');
-    //             }
-    //             else if (date >= today.getDate() && year >= today.getFullYear() && month >= today.getMonth()) {
-    //                 week.find(`tr:eq(${i})`).append(`<td><a class="active text-dark font-weight-bolder">${date}</a></td>`);
-    //                 // tbl.append(`<li><a class="active text-dark font-weight-bolder">${date}</a></li>`);
-    //                 // cell.classList.add("active");
-    //             }
-    //             // cell.appendChild(cellText);
-    //             // tbl.appendChild(cell);
-    //             date++;
-    //         }
-    //     }
-    // }
 
     for (let i = 0; i < 6; i++) {
-        // creates a table row
         let row = document.createElement("tr");
         row.className = `week week_${i}`;
 
-        //creating individual cells, filing them up with data.
         for (let j = 0; j < 7; j++) {
             if (i === 0 && j < firstDay) {
                 let cell = document.createElement("td");
@@ -148,7 +108,7 @@ function showCalendar(month, year) {
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
                     cell.setAttribute('data-day', date);
-                    put_badges_new(date, cell);
+                    put_badges_new(cell);
                 } else if (date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
                     cell.classList.add("inactive");
                     cell.classList.add("disabled");
@@ -166,14 +126,14 @@ function showCalendar(month, year) {
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
                     cell.setAttribute('data-day', date);
-                    put_badges_new(date, cell);
+                    put_badges_new(cell);
                 }
                 cell.appendChild(cellText);
                 row.appendChild(cell);
                 date++;
             }
         }
-        tbl.appendChild(row); // appending each row into calendar body.
+        tbl.appendChild(row);
     }
 
 }
@@ -404,13 +364,12 @@ function print(clear = false, init = false, edit = false) {
             date = [...new Set(date)];
             date.forEach(element => {
                 let cell = document.querySelector(`.week > td.active[data-day='${element}']`);
-                put_badges_new(element, cell);
+                put_badges_new(cell);
             });
-            // put_badges(element.date.split("/"), false, edit);
         } else {
             let element = document.querySelector(`.week > td.active[data-badge]`);
             if (element !== null) {
-                put_badges_new(null, element);
+                put_badges_new(element);
             }
         }
     }
@@ -457,38 +416,6 @@ function clear_storage(){
     });
 }
 
-// function put_badges(input = false, init = false, edit = false){
-//     if (input == false) {
-//         var label = GetDateInput();
-//     } else {
-//         var label = input;
-//     }
-
-//     var td = $(`.week td.active:contains("${label[0]}")`);
-
-//     if (td.hasClass("badge1") == true) {
-//         var counter = parseInt(td.attr("data-badge"));
-//         console.log(counter);
-//         if (typeof counter == 'undefined') {
-//             // td.data("badge", 1);
-//             td.removeClass('badge1');
-//             td.removeAttr( "data-badge" );
-//         } else if (counter > 0) {
-//             td.attr('data-badge', counter);
-//             if (init == false) {
-//                 if (edit == false) {
-//                     td.attr('data-badge', counter+1);
-//                 } else {
-//                     td.attr('data-badge', counter-1);
-//                 }
-//             }
-//         }
-//     } else {
-//         td.addClass( "badge1" );
-//         td.attr('data-badge', 1);
-//     }
-// };
-
 function edit_appointment(id){
     var data = localStorage.getItem("tbAppointment");
     data = JSON.parse(data);
@@ -514,12 +441,10 @@ function delete_appointment(id){
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
             if (element == null) {
-                // delete data[i];
                 data.splice(i, 1);
             }
             if (element.id == id) {
                 data.splice(i, 1);
-                // delete data[i];
             }
         }
         data = data.filter(function (el) {
@@ -537,7 +462,7 @@ function delete_appointment(id){
 };
 
 
-function put_badges_new(date, cell) {
+function put_badges_new(cell) {
     var data = localStorage.getItem("tbAppointment");
     data = JSON.parse(data);
     if (data[0] !== null) {

@@ -33,12 +33,6 @@
     padding: 10px 0;
 }
 
-/* .week > td.active:hover { */
-    /* background-color: red; */
-    /* background: red; */
-    /* color: red; */
-/* } */
-
 .badge1 {
     position:relative;
 }
@@ -58,7 +52,6 @@
     box-shadow: 0 0 1px #333;
 }
 
-/* Add media queries for smaller screens */
 @media screen and (max-width:720px) {
 
     .weekdays td,
