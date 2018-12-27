@@ -16,7 +16,7 @@ $(function () {
     } else {
         iziToast.warning({
             title: 'Caution',
-            message: "Sorry, but your web browser do not support localstorage, this app won't work. Try updating your browser first.",
+            message: "Sorry, but your web browser do not support localstorage, therefore this app won't work as it suposed to. Try updating your browser first.",
             overlay: true,
             zindex: 999,
             position: 'center',
@@ -30,7 +30,7 @@ $(function () {
     });
 
     $("#start_time").inputmask("hh:mm", {
-        placeholder: "hh:mm",
+        placeholder: "hh:mm (24h)",
         alias: "datetime",
         clearIncomplete: true,
         oncomplete: function(){
@@ -38,7 +38,7 @@ $(function () {
     }});
 
     $("#end_time").inputmask("hh:mm", {
-        placeholder: "hh:mm",
+        placeholder: "hh:mm (24h)",
         alias: "datetime",
         clearIncomplete: true,
         oncomplete: function(){
@@ -149,7 +149,7 @@ function showCalendar(month, year) {
                     cell.classList.add("font-weight-bold");
                     cell.setAttribute('data-day', date);
                     put_badges_new(date, cell);
-                } else if(date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
+                } else if (date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
                     cell.classList.add("inactive");
                     cell.classList.add("disabled");
                     cell.classList.add("text-white");
@@ -180,7 +180,16 @@ function showCalendar(month, year) {
 
 $("#days td.active").on("click", function () {
     $('#date').val($(this).text() + "/" + ($('#month').data('val') + 1) + "/" + $('#year').text());
-    $("#description").focus();
+    if (is_empty() == true) {
+        $("#submit").prop('disabled', true);
+    } else {
+        $("#submit").prop('disabled', false);
+    }
+    if ($("#description").val() == null || $("#description").val() == '') {
+        $("#description").focus();
+    } else {
+        $("#submit").focus();
+    }
 });
 
 $("#days td.inactive").on("click", function () {
@@ -333,8 +342,12 @@ function is_overlap(sTime, eTime) {
             const element = timeList[i];
             if (element.date == $("#date").val()) {
                 if (
-                    sTime < element.start_time && eTime > element.start_time ||
-                    sTime < element.end_time && eTime > element.end_time
+                    sTime > element.start_time && sTime < element.end_time ||
+                    eTime > element.start_time && eTime < element.end_time ||
+                    sTime < element.start_time && eTime >= element.end_time ||
+                    sTime <= element.start_time && eTime > element.end_time ||
+                    sTime == element.start_time && eTime == element.end_time
+
                 ) {
                     return true;
                 }
@@ -365,47 +378,66 @@ function print(clear = false, init = false, edit = false) {
     data = JSON.parse(data);
     if (data[0] !== null) {
         $("#appointment_list > tbody").html("");
+        $(`.week td.active`).removeClass('badge1');
+        $(`.week td.active`).removeAttr( "data-badge" );
         let date = [];
-        for (let i = 0; i < data.length; i++) {
-            const element = data[i];
-            $("#appointment_list > tbody").append(
-                `
-                <tr>
-                    <td class="text-center align-middle">${element.date}</td>
-                    <td class="text-center align-middle">${element.description}</td>
-                    <td class="text-center align-middle">${element.start_time}</td>
-                    <td class="text-center align-middle">${element.end_time}</td>
-                    <td class="text-center align-middle">
-                        <button class="btn btn-danger btn-sm " onclick="delete_appointment(${element.id})"><i class="fas fa-times-circle"></i></button>
-                        <button class="btn btn-primary btn-sm " onclick="edit_appointment(${element.id})"><i class="fas fa-edit"></i></button>
-                    </td>
-                </tr>
-                `
-            );
-            let currDate = element.date.split("/");
-            date.push(currDate[0]);
+        if (data.length !== 0) {
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i];
+                $("#appointment_list > tbody").append(
+                    `
+                    <tr>
+                        <td class="text-center align-middle">${element.date}</td>
+                        <td class="text-center align-middle">${element.description}</td>
+                        <td class="text-center align-middle">${element.start_time}</td>
+                        <td class="text-center align-middle">${element.end_time}</td>
+                        <td class="text-center align-middle">
+                            <button class="btn btn-danger btn-sm " onclick="delete_appointment(${element.id})"><i class="fas fa-times-circle"></i></button>
+                            <button class="btn btn-primary btn-sm " onclick="edit_appointment(${element.id})"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    `
+                );
+                let currDate = element.date.split("/");
+                date.push(currDate[0]);
+            }
+            date = [...new Set(date)];
+            date.forEach(element => {
+                let cell = document.querySelector(`.week > td.active[data-day='${element}']`);
+                put_badges_new(element, cell);
+            });
+            // put_badges(element.date.split("/"), false, edit);
+        } else {
+            let element = document.querySelector(`.week > td.active[data-badge]`);
+            if (element !== null) {
+                put_badges_new(null, element);
+            }
         }
-        date = [...new Set(date)];
-        date.forEach(element => {
-            let cell = document.querySelector(`.week > td.active[data-day='${element}']`);
-            put_badges_new(element, cell);
-        });
-        // put_badges(element.date.split("/"), false, edit);
     }
 }
 
 function SaveDataToLocalStorage(data)
 {
     var a = [];
-    // Parse the serialized data back into an aray of objects
     a = JSON.parse(localStorage.getItem('tbAppointment'));
+
     var a = a.filter(function (el) {
         return el != null;
     });
 
-    // Push the new data (whether it be an object or anything else) onto the array
     a.push(data);
-    // Re-serialize the array back into a string and store it in localStorage
+    a.sort(function (sTime1, sTime2) {
+        let temp3 = parseInt(sTime1.date.slice(0,2))
+        let temp4 = parseInt(sTime2.date.slice(0,2))
+        let temp1 = Date.parse(get_Date(sTime1.start_time));
+        let temp2 = Date.parse(get_Date(sTime2.start_time));
+
+
+        if (temp3 > temp4) return 1;
+        if (temp3 < temp4) return -1;
+        if (temp1 > temp2) return 1;
+        if (temp1 < temp2) return -1;
+    });
     localStorage.setItem('tbAppointment', JSON.stringify(a));
 }
 
@@ -473,7 +505,6 @@ function edit_appointment(id){
             }
         }
     }
-
 };
 
 function delete_appointment(id){
@@ -513,11 +544,9 @@ function put_badges_new(date, cell) {
         let counter = 0;
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
-            // if (cell.hasAttribute('data-day')) {
-                if (cell.getAttribute("data-day") == element.date.slice(0,2)) {
-                    counter++;
-                }
-            // }
+            if (cell.getAttribute("data-day") == element.date.slice(0,2)) {
+                counter++;
+            }
         }
 
         if (counter >= 1) {
@@ -529,4 +558,19 @@ function put_badges_new(date, cell) {
             cell.removeAttribute('data-badge');
         }
     }
+}
+
+function sort_database(data){
+    return data.sort(function (sTime1, sTime2) {
+        let temp3 = parseInt(sTime1.date.slice(0,1))
+        let temp4 = parseInt(sTime2.date.slice(0,1))
+        let temp1 = Date.parse(get_Date(sTime1.start_time));
+        let temp2 = Date.parse(get_Date(sTime2.start_time));
+
+
+        if (temp3 > temp4) return 1;
+        if (temp3 < temp4) return -1;
+        if (temp1 > temp2) return -1;
+        if (temp1 < temp2) return 1;
+    });
 }
