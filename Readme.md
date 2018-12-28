@@ -2,7 +2,7 @@
 
 ## About the Project
 
-[Vanhack](##Vanhack) send all applicants challenges through [HackerRank](##HackerRank) in order to verify their coding skills. This specific challende was to make a calendar app. The calendar should display all the dates for the current month. The calendar app should also be able to mark appointments. The app must have the following functionality:
+[Vanhack](#Vanhack) send all applicants challenges through [HackerRank](#HackerRank) in order to verify their coding skills. This specific challende was to make a calendar app. The calendar should display all the dates for the current month. The calendar app should also be able to mark appointments. The app must have the following functionality:
 
 - Any appointment can be made for the current day or for a future date.
 - No two appointments should overlap. If an appointment already exists for a day, a warning should be shown.
