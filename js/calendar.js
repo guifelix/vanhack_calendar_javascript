@@ -108,7 +108,7 @@ function showCalendar(month, year) {
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
                     cell.setAttribute('data-day', date);
-                    put_badges_new(cell);
+                    put_badges(cell);
                 } else if (date < today.getDate() && year <= today.getFullYear() && month <= today.getMonth()){
                     cell.classList.add("inactive");
                     cell.classList.add("disabled");
@@ -126,7 +126,7 @@ function showCalendar(month, year) {
                     cell.classList.add("text-center");
                     cell.classList.add("font-weight-bold");
                     cell.setAttribute('data-day', date);
-                    put_badges_new(cell);
+                    put_badges(cell);
                 }
                 cell.appendChild(cellText);
                 row.appendChild(cell);
@@ -364,12 +364,12 @@ function print(clear = false, init = false, edit = false) {
             date = [...new Set(date)];
             date.forEach(element => {
                 let cell = document.querySelector(`.week > td.active[data-day='${element}']`);
-                put_badges_new(cell);
+                put_badges(cell);
             });
         } else {
             let element = document.querySelector(`.week > td.active[data-badge]`);
             if (element !== null) {
-                put_badges_new(element);
+                put_badges(element);
             }
         }
     }
@@ -462,7 +462,7 @@ function delete_appointment(id){
 };
 
 
-function put_badges_new(cell) {
+function put_badges(cell) {
     var data = localStorage.getItem("tbAppointment");
     data = JSON.parse(data);
     if (data[0] !== null) {
