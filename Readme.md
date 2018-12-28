@@ -28,7 +28,10 @@ To run this project you just have to [clone](https://help.github.com/articles/cl
 
 ### Vanhack
 
-<p align="center" style="max-height: 120px; max-width: 120px;"><img src="assets/vanhack.png" style="max-height: 120px; max-width: 120px;"></p>
+<!-- <p align="center"><img src="assets/vanhack.png" style="max-height: 120px; max-width: 120px;"></p> -->
+<p align="center"><img src="assets/vanhack.png" width="120"></p>
+
+![Vanhack logo](assets/vanhack.png)
 
 > VanHack is a network of the world’s top software engineering, design, and digital marketing talent - available on demand to relocate to help companies grow. With over 180,000 members from 73 countries, VanHack is the largest workforce that is ready to relocate in the world.
 
@@ -36,7 +39,10 @@ visit their website [here](https://www.vanhack.com)
 
 ### HackerRank
 
-<p align="center" style="max-height: 120px; max-width: 120px;"><img src="assets/hackerrank.png" style="max-height: 120px; max-width: 120px;"></p>
+<!-- <p align="center"><img src="assets/hackerrank.png" style="max-height: 120px; max-width: 120px;"></p> -->
+<p align="center"><img src="assets/hackerrank.png" width="120"></p>
+
+![Hacker Rank logo](assets/hackerrank.png)
 
 > HackerRank is a technology hiring platform that is the standard for assessing developer skills for over 1,000 companies around the world. By enabling tech recruiters and hiring managers to objectively evaluate talent at every stage of the recruiting process, HackerRank helps companies hire skilled developers and innovate faster.
 
